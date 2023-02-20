@@ -35,5 +35,13 @@ public class AutosControllerTests {
                 .andExpect(jsonPath("$[0].vin").value("7F03Z01025"));
     }
 
-
+    @Test
+    public void getRequestWithNoVinSearchesByParams() throws Exception {
+        mockMvc.perform(get(path)
+                .param("color", "RED")
+                .param("make", "Ford"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].vin").value("7F03Z01025"));
+    }
 }
