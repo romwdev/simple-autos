@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.hamcrest.collection.IsCollectionWithSize.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -25,4 +26,14 @@ public class AutosControllerTests {
                 .andExpect(jsonPath("$.owner").value("John Doe"))
                 .andExpect(jsonPath("$.vin").value("7F03Z01025"));
     }
+
+    @Test
+    public void getRequestWithNoVinOrParamsReturnsAllAutos() throws Exception {
+        mockMvc.perform(get(path))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].vin").value("7F03Z01025"));
+    }
+
+
 }

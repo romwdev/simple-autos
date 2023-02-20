@@ -1,9 +1,6 @@
 package com.galvanize.simpleautos;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,5 +22,26 @@ public class AutosController {
             }
         }
         return null;
+    }
+
+    @GetMapping()
+    public List<Automobile> getAllAutos(@RequestParam(required = false) Colors color, @RequestParam(required = false) String make) {
+        if (color == null && make == null) {
+            return automobiles;
+        }
+        List<Automobile> searchResults = new ArrayList<>();
+
+        for (Automobile auto : automobiles) {
+            if (make == null) {
+                if (auto.getColor() == color) {
+                    searchResults.add(auto);
+                }
+            } else {
+                if (auto.getMake().equals(make)) {
+                    searchResults.add(auto);
+                }
+            }
+        }
+        return searchResults;
     }
 }
