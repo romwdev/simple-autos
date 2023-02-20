@@ -78,4 +78,12 @@ public class AutosControllerTests {
 
     }
 
+    @Test
+    public void deleteRequestRemovesAutoFromList() throws Exception {
+        mockMvc.perform(delete(path + "/7F03Z01025"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get(path))
+                .andExpect(jsonPath("$", hasSize(1)));
+    }
+
 }

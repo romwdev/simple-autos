@@ -61,4 +61,14 @@ public class AutosController {
             }
         }
     }
+
+    @DeleteMapping("/{vin}")
+    public void deleteAuto(@PathVariable String vin) {
+        for (Automobile auto : automobiles.getAutomobiles()) {
+            if (auto.getVin().equals(vin)) {
+                automobiles.deleteAuto(auto);
+                break;
+            }
+        }
+    }
 }

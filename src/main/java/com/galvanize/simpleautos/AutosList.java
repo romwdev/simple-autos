@@ -18,4 +18,8 @@ public class AutosList {
     public void addAuto(Automobile auto) {
         automobiles.add(auto);
     }
+
+    public void deleteAuto(Automobile auto) {
+        automobiles.remove(auto);
+    }
 }
