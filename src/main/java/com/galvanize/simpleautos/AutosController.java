@@ -9,15 +9,11 @@ import java.util.List;
 @RestController
 @RequestMapping("api/autos")
 public class AutosController {
-    List<Automobile> automobiles = new ArrayList<>();
-
-    public AutosController() {
-        automobiles.add(new Automobile(1967, "Ford", "Mustang", Colors.RED, "John Doe", "7F03Z01025"));
-    }
+    AutosList automobiles = new AutosList();
 
     @GetMapping("/{vin}")
     public Automobile getAutoByVin(@PathVariable String vin) {
-        for (Automobile auto : automobiles) {
+        for (Automobile auto : automobiles.getAutomobiles()) {
             if (auto.getVin().equals(vin)) {
                 return auto;
             }
@@ -28,11 +24,11 @@ public class AutosController {
     @GetMapping()
     public List<Automobile> getAllAutos(@RequestParam(required = false) Colors color, @RequestParam(required = false) String make) {
         if (color == null && make == null) {
-            return automobiles;
+            return automobiles.getAutomobiles();
         }
         List<Automobile> searchResults = new ArrayList<>();
 
-        for (Automobile auto : automobiles) {
+        for (Automobile auto : automobiles.getAutomobiles()) {
             if (color == null) {
                 if (auto.getMake().equals(make)) {
                     searchResults.add(auto);
@@ -53,12 +49,12 @@ public class AutosController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void addToAutos(@RequestBody Automobile auto) {
-        automobiles.add(auto);
+        automobiles.addAuto(auto);
     }
 
     @PatchMapping("/{vin}")
     public void updateAuto(@PathVariable String vin, @RequestBody UpdateAuto update) {
-        for (Automobile auto : automobiles) {
+        for (Automobile auto : automobiles.getAutomobiles()) {
             if (auto.getVin().equals(vin)) {
                 auto.setColor(update.getColor());
                 auto.setOwner(update.getOwner());
