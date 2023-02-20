@@ -55,4 +55,14 @@ public class AutosController {
     public void addToAutos(@RequestBody Automobile auto) {
         automobiles.add(auto);
     }
+
+    @PatchMapping("/{vin}")
+    public void updateAuto(@PathVariable String vin, @RequestBody UpdateAuto update) {
+        for (Automobile auto : automobiles) {
+            if (auto.getVin().equals(vin)) {
+                auto.setColor(update.getColor());
+                auto.setOwner(update.getOwner());
+            }
+        }
+    }
 }

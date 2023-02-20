@@ -64,4 +64,18 @@ public class AutosControllerTests {
                 .andExpect(jsonPath("$[0].vin").value("7F03Z01025"));
     }
 
+    @Test
+    public void patchRequestUpdatesColorAndOwner() throws Exception {
+        UpdateAuto update = new UpdateAuto(Colors.BLUE, "Bobert");
+        mockMvc.perform(patch(path + "/AAAAAAA")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(update)))
+                .andExpect(status().isOk());
+        mockMvc.perform(get(path + "/AAAAAAA"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.color").value("BLUE"))
+                .andExpect(jsonPath("$.owner").value("Bobert"));
+
+    }
+
 }
