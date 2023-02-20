@@ -1,5 +1,6 @@
 package com.galvanize.simpleautos;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -32,16 +33,26 @@ public class AutosController {
         List<Automobile> searchResults = new ArrayList<>();
 
         for (Automobile auto : automobiles) {
-            if (make == null) {
+            if (color == null) {
+                if (auto.getMake().equals(make)) {
+                    searchResults.add(auto);
+                }
+            } else if (make == null) {
                 if (auto.getColor() == color) {
                     searchResults.add(auto);
                 }
             } else {
-                if (auto.getMake().equals(make)) {
+                if (auto.getColor() == color && auto.getMake().equals(make)) {
                     searchResults.add(auto);
                 }
             }
         }
         return searchResults;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addToAutos(@RequestBody Automobile auto) {
+        automobiles.add(auto);
     }
 }
