@@ -10,8 +10,10 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,5 +76,15 @@ class AutosServiceTests {
 
     @Test
     void deleteAuto() {
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.ofNullable(automobile));
+        autosService.deleteAuto(automobile.getVin());
+        verify(autosRepository).delete(any(Automobile.class));
+    }
+
+    @Test
+    void deleteAutoNotExists() {
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.empty());
+        assertThatExceptionOfType(AutoNotFoundException.class)
+                .isThrownBy(() -> autosService.deleteAuto("NOTEXISTSVIN"));
     }
 }
