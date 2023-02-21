@@ -1,6 +1,7 @@
 package com.galvanize.simpleautos;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -28,6 +29,14 @@ public class AutosControllerTests {
     private AutosService autosService;
     private ObjectMapper objectMapper = new ObjectMapper();
     private final String path = "/api/autos";
+    private final String updateAutoJson = "{\"color\": \"RED\",\"owner\": \"Bob\"}";
+    private Automobile automobile;
+
+    @BeforeEach
+    void setUp() {
+        automobile = new Automobile(1967, "Ford", "Mustang", "AABBCC");
+
+    }
 
     @Test
     void getRequestWithNoVinOrParamsReturnsAllAutos() throws Exception {
@@ -106,7 +115,6 @@ public class AutosControllerTests {
 
     @Test
     void postRequestReturnsAuto() throws Exception {
-        Automobile automobile = new Automobile(1967, "Ford", "Mustang", "AABBCC");
         when(autosService.addAuto(any(Automobile.class))).thenReturn(automobile);
         mockMvc.perform(post(path)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -129,7 +137,6 @@ public class AutosControllerTests {
 
     @Test
     void getRequestWithVinReturnsAuto() throws Exception {
-        Automobile automobile = new Automobile(1967, "Ford", "Mustang", "AABBCC");
         when(autosService.getAuto(anyString())).thenReturn(automobile);
         mockMvc.perform(get(path + "/" + automobile.getVin()))
                 .andExpect(status().isOk())
@@ -139,20 +146,37 @@ public class AutosControllerTests {
     @Test
     void getRequestWithVinWhenNoAutosExistReturns204() throws Exception {
         when(autosService.getAuto(anyString())).thenReturn(new Automobile());
-        mockMvc.perform(get(path + "/AABBCC"))
+        mockMvc.perform(get(path + "/" + automobile.getVin()))
                 .andExpect(status().isNoContent());
     }
 
     @Test
     void patchRequestWithObjectReturnsAuto() throws Exception {
-        Automobile automobile = new Automobile(1967, "Ford", "Mustang", "AABBCC");
         when(autosService.updateAuto(anyString(), anyString(), anyString())).thenReturn(automobile);
         mockMvc.perform(patch(path + "/" + automobile.getVin())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"color\": \"RED\",\"owner\": \"Bob\"}"))
+                .content(updateAutoJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.color").value("RED"))
                 .andExpect(jsonPath("$.owner").value("Bob"));
+    }
+
+    @Test
+    void patchRequestReturnsNoContentIfNotFound() throws Exception {
+        when(autosService.updateAuto(anyString(), anyString(), anyString())).thenReturn(new Automobile());
+        mockMvc.perform(patch(path + "/" + automobile.getVin())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(updateAutoJson))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void patchRequestReturns400ForBadRequest() throws Exception {
+        when(autosService.updateAuto(anyString(), anyString(), anyString())).thenThrow(InvalidAutoException.class);
+        mockMvc.perform(patch(path + "/" + automobile.getVin())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateAutoJson))
+                .andExpect(status().isBadRequest());
     }
 
     private List<Automobile> populateAutos() {

@@ -45,11 +45,14 @@ public class AutosController {
     }
 
     @PatchMapping("/{vin}")
-    public Automobile updateAuto(@PathVariable String vin, @RequestBody UpdateAuto update) {
+    public ResponseEntity<Automobile> updateAuto(@PathVariable String vin, @RequestBody UpdateAuto update) {
         Automobile automobile = autosService.updateAuto(vin, update.getColor(), update.getOwner());
+        if (automobile.getVin() == null) {
+            return ResponseEntity.noContent().build();
+        }
         automobile.setColor(update.getColor());
         automobile.setOwner(update.getOwner());
-        return automobile;
+        return ResponseEntity.ok(automobile);
     }
 
     @ExceptionHandler
