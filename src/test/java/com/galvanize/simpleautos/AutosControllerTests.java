@@ -14,8 +14,7 @@ import java.util.List;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,7 +26,7 @@ public class AutosControllerTests {
     private MockMvc mockMvc;
     @MockBean
     private AutosService autosService;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final String path = "/api/autos";
     private final String updateAutoJson = "{\"color\": \"RED\",\"owner\": \"Bob\"}";
     private Automobile automobile;
@@ -177,6 +176,13 @@ public class AutosControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updateAutoJson))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deleteRequestWithVinReturns202() throws Exception {
+        mockMvc.perform(delete(path + "/" + automobile.getVin()))
+                .andExpect(status().isAccepted());
+        verify(autosService).deleteAuto(anyString());
     }
 
     private List<Automobile> populateAutos() {
