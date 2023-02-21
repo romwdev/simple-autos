@@ -1,14 +1,14 @@
 package com.galvanize.simpleautos;
 
 public class UpdateAuto {
-    private Colors color;
+    private String color;
     private String owner;
 
-    public Colors getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(Colors color) {
+    public void setColor(String color) {
         this.color = color;
     }
 
@@ -20,7 +20,7 @@ public class UpdateAuto {
         this.owner = owner;
     }
 
-    public UpdateAuto(Colors color, String owner) {
+    public UpdateAuto(String color, String owner) {
         this.color = color;
         this.owner = owner;
     }

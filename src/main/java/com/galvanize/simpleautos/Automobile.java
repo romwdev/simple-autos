@@ -4,7 +4,7 @@ public class Automobile {
     private int year;
     private String make;
     private String model;
-    private Colors color;
+    private String color;
     private String owner;
     private String vin;
 
@@ -17,10 +17,10 @@ public class Automobile {
     public String getModel() {
         return model;
     }
-    public Colors getColor() {
+    public String getColor() {
         return color;
     }
-    public void setColor(Colors color) {
+    public void setColor(String color) {
         this.color = color;
     }
     public String getOwner() {
@@ -33,12 +33,10 @@ public class Automobile {
         return vin;
     }
 
-    public Automobile(int year, String make, String model, Colors color, String owner, String vin) {
+    public Automobile(int year, String make, String model, String vin) {
         this.year = year;
         this.make = make;
         this.model = model;
-        this.color = color;
-        this.owner = owner;
         this.vin = vin;
     }
 }
