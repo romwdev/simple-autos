@@ -3,6 +3,7 @@ package com.galvanize.simpleautos;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AutosService {
@@ -33,7 +34,13 @@ public class AutosService {
     }
 
     public Automobile updateAuto(String vin, String color, String owner) {
-        return null;
+        Optional<Automobile> oAutomobile = autosRepository.findByVin(vin);
+        if (oAutomobile.isEmpty()) {
+            return null;
+        }
+        oAutomobile.get().setColor(color);
+        oAutomobile.get().setOwner(owner);
+        return autosRepository.save(oAutomobile.get());
     }
 
     public void deleteAuto(String vin) {

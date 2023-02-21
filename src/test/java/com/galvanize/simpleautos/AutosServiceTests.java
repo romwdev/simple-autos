@@ -65,6 +65,11 @@ class AutosServiceTests {
 
     @Test
     void updateAuto() {
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.ofNullable(automobile));
+        when(autosRepository.save(any(Automobile.class))).thenReturn(automobile);
+        Automobile auto = autosService.updateAuto(automobile.getVin(), "BLUE", "Robert Taylor");
+        assertThat(auto).isNotNull();
+        assertThat(auto.getVin()).isEqualTo(automobile.getVin());
     }
 
     @Test
