@@ -185,6 +185,13 @@ public class AutosControllerTests {
         verify(autosService).deleteAuto(anyString());
     }
 
+    @Test
+    void deleteRequestReturnsNoContentIfNotFound() throws Exception {
+        doThrow(new AutoNotFoundException()).when(autosService).deleteAuto(anyString());
+        mockMvc.perform(delete(path + "/" + automobile.getVin()))
+                .andExpect(status().isNoContent());
+    }
+
     private List<Automobile> populateAutos() {
         List<Automobile> automobiles = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
