@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -45,11 +46,12 @@ class AutosServiceTests {
     }
 
     @Test
-    void testGetAutos() {
-    }
-
-    @Test
-    void addAuto() {
+    void addAutoReturnsAuto() {
+        when(autosRepository.save(any(Automobile.class)))
+                .thenReturn(automobile);
+        Automobile auto = autosService.addAuto(automobile);
+        assertThat(auto).isNotNull();
+        assertThat(auto.getVin()).isEqualTo("AABBCC");
     }
 
     @Test
