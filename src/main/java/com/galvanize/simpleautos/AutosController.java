@@ -37,6 +37,21 @@ public class AutosController {
         return autosService.addAuto(auto);
     }
 
+    @GetMapping("/{vin}")
+    public ResponseEntity<Automobile> getAutoByVin(@PathVariable String vin) {
+        Automobile auto = autosService.getAuto(vin);
+        return auto.getVin() == null ? ResponseEntity.noContent().build() :
+                ResponseEntity.ok(auto);
+    }
+
+    @PatchMapping("/{vin}")
+    public Automobile updateAuto(@PathVariable String vin, @RequestBody UpdateAuto update) {
+        Automobile automobile = autosService.updateAuto(vin, update.getColor(), update.getOwner());
+        automobile.setColor(update.getColor());
+        automobile.setOwner(update.getOwner());
+        return automobile;
+    }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void invalidAutoExceptionHandler(InvalidAutoException e) {}

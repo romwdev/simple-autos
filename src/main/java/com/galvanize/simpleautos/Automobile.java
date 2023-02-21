@@ -42,4 +42,6 @@ public class Automobile {
         this.model = model;
         this.vin = vin;
     }
+
+    public Automobile() {}
 }

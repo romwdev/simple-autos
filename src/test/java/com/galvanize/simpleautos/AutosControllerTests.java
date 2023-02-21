@@ -15,8 +15,7 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -126,6 +125,34 @@ public class AutosControllerTests {
                 .content(json))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getRequestWithVinReturnsAuto() throws Exception {
+        Automobile automobile = new Automobile(1967, "Ford", "Mustang", "AABBCC");
+        when(autosService.getAuto(anyString())).thenReturn(automobile);
+        mockMvc.perform(get(path + "/" + automobile.getVin()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.vin").value(automobile.getVin()));
+    }
+
+    @Test
+    void getRequestWithVinWhenNoAutosExistReturns204() throws Exception {
+        when(autosService.getAuto(anyString())).thenReturn(new Automobile());
+        mockMvc.perform(get(path + "/AABBCC"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void patchRequestWithObjectReturnsAuto() throws Exception {
+        Automobile automobile = new Automobile(1967, "Ford", "Mustang", "AABBCC");
+        when(autosService.updateAuto(anyString(), anyString(), anyString())).thenReturn(automobile);
+        mockMvc.perform(patch(path + "/" + automobile.getVin())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"color\": \"RED\",\"owner\": \"Bob\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.color").value("RED"))
+                .andExpect(jsonPath("$.owner").value("Bob"));
     }
 
     private List<Automobile> populateAutos() {
