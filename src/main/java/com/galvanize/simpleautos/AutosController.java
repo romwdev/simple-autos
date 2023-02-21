@@ -36,4 +36,8 @@ public class AutosController {
     public Automobile addAuto(@RequestBody Automobile auto) {
         return autosService.addAuto(auto);
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void invalidAutoExceptionHandler(InvalidAutoException e) {}
 }

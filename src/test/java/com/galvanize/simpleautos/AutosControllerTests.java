@@ -108,7 +108,6 @@ public class AutosControllerTests {
     @Test
     void postRequestReturnsAuto() throws Exception {
         Automobile automobile = new Automobile(1967, "Ford", "Mustang", "AABBCC");
-//        String json = "{\"year\":1967,\"make\":\"Ford\",\"model\":\"Mustang\",\"color\":null,\"owner\":null,\"vin\":\"AABBCC\"}";
         when(autosService.addAuto(any(Automobile.class))).thenReturn(automobile);
         mockMvc.perform(post(path)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -116,6 +115,17 @@ public class AutosControllerTests {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.make").value("Ford"));
+    }
+
+    @Test
+    void postRequestBadRequestReturns400() throws Exception {
+        String json = "{\"year\":1967,\"make\":\"Ford\",\"model\":\"Mustang\",\"color\":null,\"owner\":null,\"vin\":\"AABBCC\"}";
+        when(autosService.addAuto(any(Automobile.class))).thenThrow(InvalidAutoException.class);
+        mockMvc.perform(post(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     private List<Automobile> populateAutos() {
