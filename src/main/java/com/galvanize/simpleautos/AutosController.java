@@ -29,6 +29,11 @@ public class AutosController {
         }
         return autosList.isEmpty() ? ResponseEntity.noContent().build() :
                 ResponseEntity.ok(autosList);
+    }
 
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    public Automobile addAuto(@RequestBody Automobile auto) {
+        return autosService.addAuto(auto);
     }
 }
