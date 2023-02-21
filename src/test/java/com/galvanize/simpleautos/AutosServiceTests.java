@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,11 +52,15 @@ class AutosServiceTests {
                 .thenReturn(automobile);
         Automobile auto = autosService.addAuto(automobile);
         assertThat(auto).isNotNull();
-        assertThat(auto.getVin()).isEqualTo("AABBCC");
+        assertThat(auto.getVin()).isEqualTo(automobile.getVin());
     }
 
     @Test
-    void getAuto() {
+    void getAutoByVin() {
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.ofNullable(automobile));
+        Automobile auto = autosService.getAuto(automobile.getVin());
+        assertThat(auto).isNotNull();
+        assertThat(auto.getVin()).isEqualTo(automobile.getVin());
     }
 
     @Test
