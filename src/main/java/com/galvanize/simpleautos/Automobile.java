@@ -52,6 +52,17 @@ public class Automobile {
         return vin;
     }
 
+    public String toString() {
+        return "Automobile{" +
+                "year=" + year +
+                ", make=" + make + '\'' +
+                ", model=" + model + '\'' +
+                ", color=" + color + '\'' +
+                ", owner=" + owner + '\'' +
+                ", vin=" + vin + '\'' +
+                "}";
+    }
+
     public Automobile(int year, String make, String model, String vin) {
         this.year = year;
         this.make = make;
