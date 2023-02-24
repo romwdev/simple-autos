@@ -34,6 +34,9 @@ public class AutosController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public Automobile addAuto(@RequestBody Automobile auto) {
+        if(auto.getYear() == 0 || auto.getMake() == null || auto.getModel() == null || auto.getVin() == null) {
+            throw new InvalidAutoException();
+        }
         return autosService.addAuto(auto);
     }
 
