@@ -67,6 +67,15 @@ class AutosServiceTests {
     }
 
     @Test
+    void addAutoBadContentReturnsBadRequest() {
+        Automobile badAuto = new Automobile();
+        when(autosRepository.save(any(Automobile.class)))
+                .thenReturn(badAuto);
+        Automobile auto = autosService.addAuto(badAuto);
+        assertThat(auto.getVin()).isNull();
+    }
+
+    @Test
     void getAutoByVin() {
         when(autosRepository.findByVin(anyString())).thenReturn(Optional.ofNullable(automobile));
         Automobile auto = autosService.getAuto(automobile.getVin());
