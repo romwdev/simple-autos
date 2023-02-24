@@ -41,9 +41,18 @@ class AutosServiceTests {
     @Test
     void getAutosSearchReturnsList() {
         automobile.setColor("RED");
-        when(autosRepository.findByColorContainsAndMakeContains(anyString(), anyString()))
+        when(autosRepository.findByColorAndMake(anyString(), anyString()))
                 .thenReturn(Arrays.asList(automobile));
         AutosList autosList = autosService.getAutos("RED", "Ford");
+        assertThat(autosList).isNotNull();
+        assertThat(autosList.isEmpty()).isFalse();
+    }
+
+    @Test
+    void getAutosSearchByColorReturnsList() {
+        automobile.setColor("RED");
+        when(autosRepository.findByColor(anyString())).thenReturn(Arrays.asList(automobile));
+        AutosList autosList = autosService.getAutos("RED", null);
         assertThat(autosList).isNotNull();
         assertThat(autosList.isEmpty()).isFalse();
     }

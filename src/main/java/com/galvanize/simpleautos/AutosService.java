@@ -18,11 +18,15 @@ public class AutosService {
     }
 
     public AutosList getAutos(String color, String make) {
-        List<Automobile> automobiles = autosRepository.findByColorContainsAndMakeContains(color, make);
-        if (!automobiles.isEmpty()) {
-            return new AutosList(automobiles);
+        List<Automobile> automobiles;
+        if (color == null) {
+            automobiles = autosRepository.findByMake(make);
+        } else if (make == null) {
+            automobiles = autosRepository.findByColor(color);
+        } else {
+            automobiles = autosRepository.findByColorAndMake(color, make);
         }
-        return null;
+        return !automobiles.isEmpty() ? new AutosList(automobiles) : new AutosList();
     }
 
     public Automobile addAuto(Automobile auto) {
