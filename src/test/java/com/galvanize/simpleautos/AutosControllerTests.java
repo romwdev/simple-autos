@@ -78,6 +78,22 @@ public class AutosControllerTests {
     }
 
     @Test
+    void getRequestSearchByColorNotFoundReturnsNoContent() throws Exception {
+        when(autosService.getAutos("RED", null)).thenReturn(new AutosList());
+        mockMvc.perform(get(path)
+                .param("color", "RED"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getRequestSearchByMakeNotFoundReturnsNoContent() throws Exception {
+        when(autosService.getAutos(null, "Ford")).thenReturn(new AutosList());
+        mockMvc.perform(get(path)
+                        .param("make", "Ford"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
     void getRequestWithMakeFordReturnsFordAutos() throws Exception {
         // populate automobiles list with 5 different autos
         List<Automobile> automobiles = populateAutos();
