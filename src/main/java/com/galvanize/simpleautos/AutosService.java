@@ -34,13 +34,13 @@ public class AutosService {
     }
 
     public Automobile getAuto(String vin) {
-        return autosRepository.findByVin(vin).orElse(null);
+        return autosRepository.findByVin(vin).orElse(new Automobile());
     }
 
     public Automobile updateAuto(String vin, String color, String owner) {
         Optional<Automobile> oAutomobile = autosRepository.findByVin(vin);
         if (oAutomobile.isEmpty()) {
-            return null;
+            return new Automobile();
         }
         oAutomobile.get().setColor(color);
         oAutomobile.get().setOwner(owner);

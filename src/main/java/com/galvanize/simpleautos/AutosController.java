@@ -53,6 +53,9 @@ public class AutosController {
         if (automobile.getVin() == null) {
             return ResponseEntity.noContent().build();
         }
+        if (update.getColor() == null && update.getOwner() == null) {
+            throw new InvalidAutoException();
+        }
         automobile.setColor(update.getColor());
         automobile.setOwner(update.getOwner());
         return ResponseEntity.ok(automobile);

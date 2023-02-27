@@ -84,7 +84,22 @@ class AutosServiceTests {
     }
 
     @Test
+    void getAutoByVinNotFoundReturns204() {
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.of(new Automobile()));
+        Automobile auto = autosService.getAuto(automobile.getVin());
+        assertThat(auto.getVin()).isNull();
+    }
+
+    @Test
     void updateAuto() {
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.ofNullable(automobile));
+        when(autosRepository.save(any(Automobile.class))).thenReturn(new Automobile());
+        Automobile auto = autosService.updateAuto(automobile.getVin(), "message", "string");
+        assertThat(auto.getVin()).isNull();
+    }
+
+    @Test
+    void updateAutoBadContentReturnsBadRequest() {
         when(autosRepository.findByVin(anyString())).thenReturn(Optional.ofNullable(automobile));
         when(autosRepository.save(any(Automobile.class))).thenReturn(automobile);
         Automobile auto = autosService.updateAuto(automobile.getVin(), "BLUE", "Robert Taylor");
