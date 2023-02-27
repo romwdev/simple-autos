@@ -41,9 +41,18 @@ class AutosServiceTests {
     @Test
     void getAutosSearchReturnsList() {
         automobile.setColor("RED");
-        when(autosRepository.findByColorContainsAndMakeContains(anyString(), anyString()))
+        when(autosRepository.findByColorAndMake(anyString(), anyString()))
                 .thenReturn(Arrays.asList(automobile));
         AutosList autosList = autosService.getAutos("RED", "Ford");
+        assertThat(autosList).isNotNull();
+        assertThat(autosList.isEmpty()).isFalse();
+    }
+
+    @Test
+    void getAutosSearchByColorReturnsList() {
+        automobile.setColor("RED");
+        when(autosRepository.findByColor(anyString())).thenReturn(Arrays.asList(automobile));
+        AutosList autosList = autosService.getAutos("RED", null);
         assertThat(autosList).isNotNull();
         assertThat(autosList.isEmpty()).isFalse();
     }
@@ -58,6 +67,15 @@ class AutosServiceTests {
     }
 
     @Test
+    void addAutoBadContentReturnsBadRequest() {
+        Automobile badAuto = new Automobile();
+        when(autosRepository.save(any(Automobile.class)))
+                .thenReturn(badAuto);
+        Automobile auto = autosService.addAuto(badAuto);
+        assertThat(auto.getVin()).isNull();
+    }
+
+    @Test
     void getAutoByVin() {
         when(autosRepository.findByVin(anyString())).thenReturn(Optional.ofNullable(automobile));
         Automobile auto = autosService.getAuto(automobile.getVin());
@@ -66,7 +84,22 @@ class AutosServiceTests {
     }
 
     @Test
+    void getAutoByVinNotFoundReturns204() {
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.of(new Automobile()));
+        Automobile auto = autosService.getAuto(automobile.getVin());
+        assertThat(auto.getVin()).isNull();
+    }
+
+    @Test
     void updateAuto() {
+        when(autosRepository.findByVin(anyString())).thenReturn(Optional.ofNullable(automobile));
+        when(autosRepository.save(any(Automobile.class))).thenReturn(new Automobile());
+        Automobile auto = autosService.updateAuto(automobile.getVin(), "message", "string");
+        assertThat(auto.getVin()).isNull();
+    }
+
+    @Test
+    void updateAutoBadContentReturnsBadRequest() {
         when(autosRepository.findByVin(anyString())).thenReturn(Optional.ofNullable(automobile));
         when(autosRepository.save(any(Automobile.class))).thenReturn(automobile);
         Automobile auto = autosService.updateAuto(automobile.getVin(), "BLUE", "Robert Taylor");

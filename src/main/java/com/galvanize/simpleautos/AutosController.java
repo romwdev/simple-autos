@@ -34,6 +34,9 @@ public class AutosController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public Automobile addAuto(@RequestBody Automobile auto) {
+        if(auto.getYear() == 0 || auto.getMake() == null || auto.getModel() == null || auto.getVin() == null) {
+            throw new InvalidAutoException();
+        }
         return autosService.addAuto(auto);
     }
 
@@ -49,6 +52,9 @@ public class AutosController {
         Automobile automobile = autosService.updateAuto(vin, update.getColor(), update.getOwner());
         if (automobile.getVin() == null) {
             return ResponseEntity.noContent().build();
+        }
+        if (update.getColor() == null && update.getOwner() == null) {
+            throw new InvalidAutoException();
         }
         automobile.setColor(update.getColor());
         automobile.setOwner(update.getOwner());
